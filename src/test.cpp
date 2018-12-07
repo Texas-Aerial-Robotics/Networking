@@ -14,22 +14,29 @@
 #include <cmath>
 #include <math.h>
 #include <ros/duration.h>
-#include <string>
+#include <std_msgs/String.h>
 
 using namespace std;
 
-void msg_cb(string msg){
-	ROS_INFO(msg);
-}
-
 int main(int argc, char** argv){
-
+	//talker
+	
 	ros::init(argc, argv, "network_test");
 	ros::NodeHandle nh;
+	
+	ros::Publisher sendMsg = nh.advertise<std_msgs::String>("messages", 10);
+	
+	std_msgs::String a;
+	a.data = "Hello world";
+	
 
-	ros::Subsriber getMsg = nh.subscribe<string>("messages", 10, msg_cb);
-
-	ros::spin();
-
+	ros::Rate(10);
+	while(ros::ok()){
+		sendMsg.publish(a);
+		ros::spinOnce();
+	}
+	
+	
+	
 	return 0;
 }
